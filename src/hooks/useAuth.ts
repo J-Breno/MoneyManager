@@ -72,14 +72,24 @@ export const useAuth = () => {
   };
 
   const updateProfile = (updatedUser: User): boolean => {
-    const users = storage.get<User[]>(STORAGE_KEYS.USERS) || [];
-    const updatedUsers = users.map(u => u.id === updatedUser.id ? updatedUser : u);
-    
-    storage.set(STORAGE_KEYS.USERS, updatedUsers);
-    storage.set(STORAGE_KEYS.CURRENT_USER, updatedUser);
-    setUser(updatedUser);
-    
-    return true;
+    try {
+      if (!updatedUser.id) {
+        console.error('Usuário não possui ID');
+        return false;
+      }
+
+      const users = storage.get<User[]>(STORAGE_KEYS.USERS) || [];
+      const updatedUsers = users.map(u => u.id === updatedUser.id ? updatedUser : u);
+      
+      storage.set(STORAGE_KEYS.USERS, updatedUsers);
+      storage.set(STORAGE_KEYS.CURRENT_USER, updatedUser);
+      setUser(updatedUser);
+      
+      return true;
+    } catch (error) {
+      console.error('Erro ao atualizar perfil:', error);
+      return false;
+    }
   };
 
   return {
