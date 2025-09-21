@@ -1,5 +1,4 @@
-// components/layout/DashboardLayout.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Home, 
@@ -11,7 +10,8 @@ import {
   X,
   User,
   Bell,
-  Search
+  Search,
+  Plus
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/router';
@@ -19,12 +19,35 @@ import { useRouter } from 'next/router';
 interface DashboardLayoutProps {
   children: React.ReactNode;
   title: string;
+  showAddButton?: boolean;
+  onAddClick?: () => void;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) => {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ 
+  children, 
+  title, 
+  showAddButton = false,
+  onAddClick 
+}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, logout } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsSidebarOpen(true);
+      } else {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    checkScreenSize();
+    
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -32,14 +55,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
   };
 
   const menuItems = [
-    { icon: Home, label: 'Dashboard', path: '/dashboard' },
-    { icon: BarChart3, label: 'Relatórios', path: '/reports' },
-    { icon: Wallet, label: 'Categorias', path: '/categories' },
+    { icon: Home, label: 'Dashboard', path: '/' },
     { icon: Settings, label: 'Configurações', path: '/settings' },
   ];
 
   return (
-    <div className="min-h-screen bg-[#161617] text-white flex">
+    <div className="min-h-screen bg-[#EDEAEF] flex">
       <AnimatePresence>
         {isSidebarOpen && (
           <motion.div
@@ -55,10 +76,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
       <motion.div
         initial={{ x: -300 }}
         animate={{ x: isSidebarOpen ? 0 : -300 }}
-        transition={{ type: 'spring', damping: 25 }}
-        className="fixed lg:relative w-80 h-screen bg-[#232224] border-r border-[#353436] z-50 lg:z-auto lg:translate-x-0"
+        transition={{ type: 'spring', damping: 25, stiffness: 100 }}
+        className="fixed lg:relative w-50 lg:w-80 h-[1000px] bg-white border-r border-[#E1DEE3] z-50 lg:z-auto lg:translate-x-0 shadow-lg lg:shadow-none"
       >
-        <div className="p-6 border-b border-[#353436]">
+        <div className="p-6 border-b border-[#E7E4E9]">
           <div className="flex items-center justify-between mb-8">
             <motion.div
               initial={{ scale: 0 }}
@@ -66,16 +87,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
               transition={{ delay: 0.1 }}
               className="flex items-center space-x-3"
             >
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-purple-800 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-[#A950C4] to-[#9142A8] rounded-xl flex items-center justify-center">
                 <Wallet size={24} className="text-white" />
               </div>
-              <span className="text-xl font-bold text-white">Money Manager</span>
+              <span className="text-xl font-bold text-[#232224]">Money Manager</span>
             </motion.div>
             <button
               onClick={() => setIsSidebarOpen(false)}
-              className="lg:hidden p-2 rounded-lg hover:bg-[#353436] transition-colors"
+              className="lg:hidden p-2 rounded-lg hover:bg-[#F7F2FA] transition-colors"
             >
-              <X size={20} />
+              <X size={20} className="text-[#454446]" />
             </button>
           </div>
 
@@ -83,14 +104,14 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="flex items-center space-x-3 p-4 bg-[#353436] rounded-xl"
+            className="flex items-center space-x-3 p-4 bg-[#F7F2FA] rounded-xl"
           >
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-purple-800 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-[#A950C4] to-[#9142A8] rounded-full flex items-center justify-center">
               <User size={20} className="text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold truncate">{user?.name}</p>
-              <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+              <p className="text-sm font-semibold truncate text-[#232224]">{user?.name}</p>
+              <p className="text-xs text-[#666566] truncate">{user?.email}</p>
             </div>
           </motion.div>
         </div>
@@ -105,11 +126,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
               onClick={() => router.push(item.path)}
               className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-200 ${
                 router.pathname === item.path
-                  ? 'bg-purple-600 text-white'
-                  : 'text-gray-300 hover:bg-[#353436] hover:text-white'
+                  ? 'bg-[#F7F2FA] text-[#5F296F] border border-[#E1DEE3]'
+                  : 'text-[#666566] hover:bg-[#F7F2FA] hover:text-[#5F296F]'
               }`}
             >
-              <item.icon size={20} />
+              <item.icon size={20} className={router.pathname === item.path ? 'text-[#5F296F]' : 'text-[#666566]'} />
               <span className="font-medium">{item.label}</span>
             </motion.button>
           ))}
@@ -123,7 +144,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
         >
           <button
             onClick={handleLogout}
-            className="w-full flex items-center space-x-3 p-3 rounded-xl text-red-400 hover:bg-red-400 hover:bg-opacity-10 transition-all duration-200"
+            className="w-full flex items-center space-x-3 p-3 rounded-xl text-[#EB3D3D] hover:bg-[#F7F2FA] transition-all duration-200"
           >
             <LogOut size={20} />
             <span className="font-medium">Sair</span>
@@ -131,34 +152,44 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
         </motion.div>
       </motion.div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col lg:ml-0">
-        {/* Header */}
-        <header className="bg-[#232224] border-b border-[#353436] p-6">
+      <div className="flex-1 flex flex-col">
+        <header className="bg-white border-b border-[#E7E4E9] p-4 lg:p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setIsSidebarOpen(true)}
-                className="lg:hidden p-2 rounded-lg hover:bg-[#353436] transition-colors"
+                className="lg:hidden p-2 rounded-lg hover:bg-[#F7F2FA] transition-colors"
               >
-                <Menu size={20} />
+                <Menu size={20} className="text-[#454446]" />
               </button>
-              <h1 className="text-2xl font-bold">{title}</h1>
+              <h1 className="text-xl lg:text-2xl font-bold text-[#232224]">{title}</h1>
             </div>
 
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <div className="flex items-center space-x-2 lg:space-x-4">
+              <div className="relative hidden sm:block">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#666566]" size={20} />
                 <input
                   type="text"
                   placeholder="Pesquisar..."
-                  className="bg-[#353436] border border-[#454446] rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-purple-600 transition-colors"
+                  className="bg-[#F7F2FA] border border-[#E7E4E9] rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-[#c300ff] transition-colors text-[#232224] w-40 lg:w-48"
                 />
               </div>
 
-              <button className="p-2 rounded-lg hover:bg-[#353436] transition-colors relative">
-                <Bell size={20} />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs flex items-center justify-center">
+              {showAddButton && onAddClick && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={onAddClick}
+                  className="flex items-center space-x-1 lg:space-x-2 bg-gradient-to-r from-[#c300ff] to-[#db67ff] text-white py-2 px-3 lg:px-4 rounded-xl font-semibold transition-all text-sm lg:text-base"
+                >
+                  <Plus size={18} className="lg:size-5" />
+                  <span className="hidden sm:block">Adicionar</span>
+                </motion.button>
+              )}
+
+              <button className="p-2 rounded-lg hover:bg-[#F7F2FA] transition-colors relative">
+                <Bell size={20} className="text-[#454446]" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#EB3D3D] rounded-full text-xs flex items-center justify-center text-white">
                   3
                 </span>
               </button>
@@ -166,7 +197,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
           </div>
         </header>
 
-        <main className="flex-1 p-6 overflow-auto">
+        <main className="flex-1 p-4 lg:p-6 overflow-auto bg-[#EDEAEF]">
           {children}
         </main>
       </div>

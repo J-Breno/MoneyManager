@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  const existingRoutes = ['/', '/login', '/register', '/dashboard', '/transactions']
+  const existingRoutes = ['/', '/login', '/register', '/settings']
   
   if (!existingRoutes.includes(request.nextUrl.pathname)) {
     const url = request.nextUrl.clone()

@@ -6,7 +6,7 @@
 
 @layer base {
   body {
-    @apply bg-[#EDEAEF] text-gray-800 font-sans; 
+    @apply bg-[#EDEAEF] text-[#232224] font-sans;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -58,4 +58,32 @@
   .bg-custom {
     background-color: #EDEAEF;
   }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes bounceLight {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-5px); }
+  60% { transform: translateY(-3px); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-bounce-light {
+  animation: bounceLight 2s infinite;
 }

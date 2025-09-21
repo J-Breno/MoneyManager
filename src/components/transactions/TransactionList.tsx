@@ -40,7 +40,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="text-center py-12 text-gray-400"
+        className="text-center py-12 text-[#666566]"
       >
         <div className="text-6xl mb-4">📊</div>
         <p>Nenhuma transação encontrada</p>
@@ -59,14 +59,14 @@ const TransactionList: React.FC<TransactionListProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-[#232224] rounded-xl p-4 border border-[#353436] hover:border-purple-600 transition-colors"
+            className="bg-white rounded-xl p-4 border border-[#E7E4E9] hover:border-[#A950C4] transition-colors"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4 flex-1">
                 <div className={`p-3 rounded-xl ${
                   transaction.type === 'income' 
-                    ? 'bg-green-500 bg-opacity-20 text-green-400' 
-                    : 'bg-red-500 bg-opacity-20 text-red-400'
+                    ? 'bg-[#50E170] bg-opacity-20 text-[#28BB49]' 
+                    : 'bg-[#F05454] bg-opacity-20 text-[#D03333]'
                 }`}>
                   {transaction.type === 'income' ? 
                     <ArrowUpCircle size={20} /> : 
@@ -75,8 +75,8 @@ const TransactionList: React.FC<TransactionListProps> = ({
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold truncate">{transaction.description}</h3>
-                  <div className="flex items-center space-x-4 text-sm text-gray-400">
+                  <h3 className="font-semibold truncate text-[#232224]">{transaction.description}</h3>
+                  <div className="flex items-center space-x-4 text-sm text-[#666566]">
                     <span>{transaction.category}</span>
                     <span>•</span>
                     <span>{formatDate(transaction.date)}</span>
@@ -86,7 +86,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
 
               <div className="flex items-center space-x-3">
                 <span className={`font-semibold ${
-                  transaction.type === 'income' ? 'text-green-400' : 'text-red-400'
+                  transaction.type === 'income' ? 'text-[#28BB49]' : 'text-[#D03333]'
                 }`}>
                   {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount)}
                 </span>
@@ -94,13 +94,13 @@ const TransactionList: React.FC<TransactionListProps> = ({
                 <div className="flex space-x-2">
                   <button
                     onClick={() => onEdit(transaction)}
-                    className="p-2 text-blue-400 hover:bg-blue-400 hover:bg-opacity-10 rounded-lg transition-colors"
+                    className="p-2 text-[#5F296F] hover:bg-[#F7F2FA] rounded-lg transition-colors"
                   >
                     <Edit3 size={16} />
                   </button>
                   <button
                     onClick={() => onDelete(transaction.id)}
-                    className="p-2 text-red-400 hover:bg-red-400 hover:bg-opacity-10 rounded-lg transition-colors"
+                    className="p-2 text-[#EB3D3D] hover:bg-[#F7F2FA] rounded-lg transition-colors"
                   >
                     <Trash2 size={16} />
                   </button>
