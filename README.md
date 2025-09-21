@@ -131,6 +131,7 @@
   "money_manager_transactions_${userId}": Array<Transaction>,
   "money_manager_categories_${userId}": Array<Category>
 }
+```
 
 # 🎯 Funcionalidades do Dashboard
 
